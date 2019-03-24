@@ -1,0 +1,21 @@
+{
+  "name": "three-particle-simulation",
+  "version": "1.0.0",
+  "description": "GPU three-particle-simulation",
+  "main": "index.js",
+  "scripts": {
+  },
+  "repository": {
+    "type": "git",
+    "url": "caepackages/three-particle-simulation"
+  },
+  "keywords": [
+  ],
+  "author": "Frank Rettig",
+  "license": "LicenseRef-LICENSE",
+  "bugs": {
+  },
+  "dependencies": {},
+  "devDependencies": {
+  }
+}
