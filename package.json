@@ -5,10 +5,7 @@
   "main": "index.js",
   "scripts": {
   },
-  "repository": {
-    "type": "git",
-    "url": "caepackages/three-particle-simulation"
-  },
+  "repository": "caepackages/three-particle-simulation",
   "keywords": [
   ],
   "author": "Frank Rettig",
