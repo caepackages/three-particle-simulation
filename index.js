@@ -1,7 +1,3 @@
-/**
- * @author rettifan
- */
-  
 module.exports = function ParticleSimulation ( THREE ){
     
 /*
