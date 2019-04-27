@@ -7,6 +7,21 @@ module.exports = function ParticleSimulation ( THREE ){
 THREE.GPUParticleSimulation = function ( options ) {
 
 	THREE.Object3D.apply( this, arguments );
+	
+	function generateParticles () {
+		var data = [];
+		var nParticles = 100;
+		var nFrames = 10;
+
+		for (var n = 0; n < nFrames; n ++) {
+			var frameData = [];
+			for (var i = 0; i < nParticles; i ++) {
+				frameData.push([-0.07 * Math.random(), -0.08 * Math.random(), -0.14 * Math.random(), 0.61 * Math.random(), -0.13 * Math.random(), -0.09 * Math.random(), 31.35 * Math.random()]);
+			}
+			data.push(frameData);
+		}
+		return data;
+	}
 
 	options = options || {};
 
@@ -14,12 +29,12 @@ THREE.GPUParticleSimulation = function ( options ) {
 
 	this.PARTICLE_COUNT = options.maxParticles || 1000000;
   
-  this.data = options.data || [];
+	this.data = options.data || generateParticles ();
   
-  this.colormap = options.colormap || "tests/assets/textures/colormap.png";
-  this.sprite = options.sprite || "tests/assets/textures/particle2.png";
+	this.colormap = options.colormap || "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAQAAAAAECAYAAABhlOHEAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsIAAA7CARUoSoAAAAGPSURBVFhH7ZRRlsIgDEUDVNcx+5v9f8yxhbk3tB51C5LKIcl7eQlULb8/f2PUiDEijhYRhZ0tyB3bS4yfPOOtJ9CJC3nrBquADbBey/Rv+jUKPHU6cQHTV2/uaDVzndoSwgFvAFZ18StJ+za5+pUcDcqpZ69yYzkfj7zMwysXz6eies2AtY24TSzo1eSLlVPDPDWXXxqXBKc5g32stU+KEasf5DxP4sb2YHE+D5w1zvTMTyxz+Nk7cx8YLyjnv/JX/LnTf3BZOcsz97kOlq3wTzzP4+z5EPUj30XmOxx7sg/2CpZ3nnn8HHvi8kY/388xMWuavrcCr42Z90uXMZihGm+8febr4O48E3V8cr5Gj3Fym/NIOZgNrFCX1528l5p9n7PCy3vYCZhZXn9wdrhaf8z5uuehTz/15SbPOYi7fSxXA07f5xkm79KAD48WM+/M8BR4rc9eYJEYWujnfKlns3d94+T66xS+6r2R3IUUPzWeC8wNzXq/+zNftmzZt9r6A1i27Itt/QEsW/a1FvEPOddBPCLzDH4AAAAASUVORK5CYII=";
+	this.sprite = options.sprite || "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyhpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNS1jMDIxIDc5LjE1NTc3MiwgMjAxNC8wMS8xMy0xOTo0NDowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIDIwMTQgKE1hY2ludG9zaCkiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6REVGODRBRjIyRjU2MTFFNUExM0Y4OUExMTc4QTBCQUMiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6REVGODRBRjMyRjU2MTFFNUExM0Y4OUExMTc4QTBCQUMiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDpERUY4NEFGMDJGNTYxMUU1QTEzRjg5QTExNzhBMEJBQyIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDpERUY4NEFGMTJGNTYxMUU1QTEzRjg5QTExNzhBMEJBQyIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PgDz1z0AAAZeSURBVHja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";
   
-	this.fps = options.fps || 60.0;  
+	this.fps = options.fps || 60.0;
   
 	this.PARTICLE_CONTAINERS = options.containerCount || 1;
 
@@ -33,7 +48,6 @@ THREE.GPUParticleSimulation = function ( options ) {
 	this.rand = [];
 
 	this.n_frames = this.data.length;
-	this.fps = 20.0;  
     
 	// custom vertex and fragement shader
 
