@@ -22,6 +22,8 @@ THREE.GPUParticleSimulation = function ( options ) {
 		}
 		return data;
 	}
+	
+	console.log(options);
 
 	options = options || {};
 
