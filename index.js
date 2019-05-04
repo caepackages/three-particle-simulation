@@ -477,20 +477,26 @@ THREE.GPUParticleContainer = function ( maxParticles, particleSystem ) {
 		this.particleShaderMat.uniforms.uTime.value = time;
         
     if (useFocusSphere) {
-      
+	  function getSphereRadius (radius, index) {
+		if (typeof radius === 'number') {
+			return radius;
+		}
+		radius[index];
+	  };
+	
       // first focus
       if (spherePosition.length > 0) {
         this.particleShaderMat.uniforms.spherePosition1 = new THREE.Uniform(spherePosition[0]);
-        this.particleShaderMat.uniforms.sphereRadius1.value = shpereRadius;        
+        this.particleShaderMat.uniforms.sphereRadius1.value = getSphereRadius(shpereRadius, 0);        
       } else {
         this.particleShaderMat.uniforms.spherePosition1 = new THREE.Uniform(new THREE.Vector3());
         this.particleShaderMat.uniforms.sphereRadius1.value = -1.0;      
       }
-      
+
       // second focus
       if (spherePosition.length > 1) {
         this.particleShaderMat.uniforms.spherePosition2 = new THREE.Uniform(spherePosition[1]);
-        this.particleShaderMat.uniforms.sphereRadius2.value = shpereRadius;
+        this.particleShaderMat.uniforms.sphereRadius2.value = getSphereRadius(shpereRadius, 1);
       } else {
         this.particleShaderMat.uniforms.spherePosition2 = new THREE.Uniform(new THREE.Vector3());
         this.particleShaderMat.uniforms.sphereRadius2.value = -1.0;      
@@ -499,7 +505,7 @@ THREE.GPUParticleContainer = function ( maxParticles, particleSystem ) {
       // 3rd focus
       if (spherePosition.length > 2) {
         this.particleShaderMat.uniforms.spherePosition3 = new THREE.Uniform(spherePosition[2]);
-        this.particleShaderMat.uniforms.sphereRadius3.value = shpereRadius;
+        this.particleShaderMat.uniforms.sphereRadius3.value = getSphereRadius(shpereRadius, 2);
       } else {
         this.particleShaderMat.uniforms.spherePosition3 = new THREE.Uniform(new THREE.Vector3());
         this.particleShaderMat.uniforms.sphereRadius3.value = -1.0;      
@@ -508,7 +514,7 @@ THREE.GPUParticleContainer = function ( maxParticles, particleSystem ) {
       // 4th focus
       if (spherePosition.length > 3) {
         this.particleShaderMat.uniforms.spherePosition4 = new THREE.Uniform(spherePosition[3]);
-        this.particleShaderMat.uniforms.sphereRadius4.value = shpereRadius;
+        this.particleShaderMat.uniforms.sphereRadius4.value = getSphereRadius(shpereRadius, 3);
       } else {
         this.particleShaderMat.uniforms.spherePosition4 = new THREE.Uniform(new THREE.Vector3());
         this.particleShaderMat.uniforms.sphereRadius4.value = -1.0;      
@@ -517,7 +523,7 @@ THREE.GPUParticleContainer = function ( maxParticles, particleSystem ) {
       // 5th focus
       if (spherePosition.length > 4) {
         this.particleShaderMat.uniforms.spherePosition5 = new THREE.Uniform(spherePosition[4]);
-        this.particleShaderMat.uniforms.sphereRadius5.value = shpereRadius;
+        this.particleShaderMat.uniforms.sphereRadius5.value = getSphereRadius(shpereRadius, 4);
       } else {
         this.particleShaderMat.uniforms.spherePosition5 = new THREE.Uniform(new THREE.Vector3());
         this.particleShaderMat.uniforms.sphereRadius5.value = -1.0;      
@@ -526,7 +532,7 @@ THREE.GPUParticleContainer = function ( maxParticles, particleSystem ) {
       // 6th focus
       if (spherePosition.length > 5) {
         this.particleShaderMat.uniforms.spherePosition6 = new THREE.Uniform(spherePosition[5]);
-        this.particleShaderMat.uniforms.sphereRadius6.value = shpereRadius;
+        this.particleShaderMat.uniforms.sphereRadius6.value = getSphereRadius(shpereRadius, 5);
       } else {
         this.particleShaderMat.uniforms.spherePosition6 = new THREE.Uniform(new THREE.Vector3());
         this.particleShaderMat.uniforms.sphereRadius6.value = -1.0;      
