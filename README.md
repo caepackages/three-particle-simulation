@@ -3,6 +3,7 @@
 ## NPM
 
 ```
+npm i three
 npm i three-particle-simulation
 ```
 
