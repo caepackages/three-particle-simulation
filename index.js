@@ -9,22 +9,34 @@ THREE.GPUParticleSimulation = function ( options ) {
 	THREE.Object3D.apply( this, arguments );
 	
 	function generateParticles () {
+		
 		var data = [];
-		var nParticles = 100;
-		var nFrames = 10;
+		
+		var nParticles = 50;
+		var nFrames = 180;
+		var r1 = 0.5;
+		var r2 = 0.1
 
 		for (var n = 0; n < nFrames; n ++) {
+		
+			var angle1 = n/nFrames * Math.PI * 2.0;
+			var rotY = new THREE.Matrix4().makeRotationY(angle1);
+			
 			var frameData = [];
 			for (var i = 0; i < nParticles; i ++) {
-				frameData.push([-0.07 * Math.random(), -0.08 * Math.random(), -0.14 * Math.random(), 0.61 * Math.random(), -0.13 * Math.random(), -0.09 * Math.random(), 31.35 * Math.random()]);
+				var angle2 = /*i/nParticles * */ Math.PI * 2.0 * Math.random() ;
+				
+				var p = new THREE.Vector3(0, 0, r2).applyAxisAngle ( new THREE.Vector3(0, 1, 0), angle2 );
+				p.add(new THREE.Vector3(r1, 0, 0));
+				p.applyAxisAngle ( new THREE.Vector3(0, 0, 1), angle1 );
+				frameData.push([p.x, p.y, p.z, 0.5 * Math.random() - 0.05, 0.5 * Math.random() - 0.05, 0.5 * Math.random() - 0.05, (0.5 + Math.sin(angle1 * 2.0 )) * 0.5]);
 			}
 			data.push(frameData);
 		}
+		
 		return data;
 	}
 	
-	console.log(options);
-
 	options = options || {};
 
 	// parse options and use defaults
