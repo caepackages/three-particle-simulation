@@ -1,6 +1,6 @@
 {
   "name": "three-particle-simulation",
-  "version": "1.0.9",
+  "version": "1.0.10",
   "description": "GPU three-particle-simulation",
   "main": "index.js",
   "scripts": {
