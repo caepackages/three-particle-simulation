@@ -481,7 +481,7 @@ THREE.GPUParticleContainer = function ( maxParticles, particleSystem ) {
 		if (typeof radius === 'number') {
 			return radius;
 		}
-		radius[index];
+		return radius[index];
 	  };
 	
       // first focus
