@@ -4,6 +4,7 @@
 
 ```
 npm i three
+npm install three-orbitcontrols
 npm i three-particle-simulation
 ```
 
@@ -12,141 +13,147 @@ npm i three-particle-simulation
 ```javascript
 // main.js
 var THREE = require('three')
+var OrbitControls = require('three-orbitcontrols')
 require('three-particle-simulation')(THREE)
-
+ 
 var camera, tick = 0,
-	scene, renderer, clock = new THREE.Clock(), container,
-	options, spawnerOptions, particleSystem;
-
+    scene, renderer, clock = new THREE.Clock(), container,
+    options, spawnerOptions, particleSystem;
+ 
 var stats;
-
+ 
 init();
 animate();
-
+ 
 function init() {
-
-	container = document.getElementById( 'container' );
-	camera = new THREE.PerspectiveCamera( 28, window.innerWidth / window.innerHeight, 0.01, 1000 );
-	camera.position.z = 1;
-
-	scene = new THREE.Scene();
-
-	function generateData () {
-		
-		var data = [];
-		
-		var nParticles = 200;
-		var nFrames = 180;
-		var r1 = 0.3;
-		var r2 = 0.2
-
-		for (var n = 0; n < nFrames; n ++) {
-		
-			var angle1 = n/nFrames * Math.PI * 2.0;
-			var rotY = new THREE.Matrix4().makeRotationY(angle1);
-			
-			var frameData = [];
-			for (var i = 0; i < nParticles; i ++) {
-				var angle2 = Math.PI * 2.0 * Math.random() ;
-				
-				var p = new THREE.Vector3(0, 0, r2).applyAxisAngle ( new THREE.Vector3(0, 1, 0), angle2 );
-				p.add(new THREE.Vector3(r1, 0, 0));
-				p.applyAxisAngle ( new THREE.Vector3(0, 0, 1), angle1 );
-				frameData.push([p.x, p.y, p.z, 0.5 * Math.random() - 0.05, 0.5 * Math.random() - 0.05, 0.5 * Math.random() - 0.05, (1.0 + Math.sin(angle1 * 2.0 )) * 0.5]);
-			}
-			data.push(frameData);
-		}
-		
-		return data;
-	}
+ 
+    container = document.getElementById( 'container' );
+    camera = new THREE.PerspectiveCamera( 28, window.innerWidth / window.innerHeight, 0.01, 1000 );
+    camera.position.z = 1;
+ 
+    scene = new THREE.Scene();
+ 
+    function generateData () {
+        
+        var data = [];
+        
+        var nParticles = 200;
+        var nFrames = 180;
+        var r1 = 0.3;
+        var r2 = 0.2
+ 
+        for (var n = 0; n < nFrames; n ++) {
+        
+            var angle1 = n/nFrames * Math.PI * 2.0;
+            var rotY = new THREE.Matrix4().makeRotationY(angle1);
+            
+            var frameData = [];
+            for (var i = 0; i < nParticles; i ++) {
+                var angle2 = Math.PI * 2.0 * Math.random() ;
+                
+                var p = new THREE.Vector3(0, 0, r2).applyAxisAngle ( new THREE.Vector3(0, 1, 0), angle2 );
+                p.add(new THREE.Vector3(r1, 0, 0));
+                p.applyAxisAngle ( new THREE.Vector3(0, 0, 1), angle1 );
+                frameData.push([p.x, p.y, p.z, 0.5 * Math.random() - 0.05, 0.5 * Math.random() - 0.05, 0.5 * Math.random() - 0.05, (1.0 + Math.sin(angle1 * 2.0 )) * 0.5]);
+            }
+            data.push(frameData);
+        }
+        
+        return data;
+    }
+    
+    var pdata = generateData();
+    
+    particleSystem = new THREE.GPUParticleSimulation( {
+        maxParticles: 250000,
+        fps: 60,
+        data: pdata,
+        colormapMaxPressure: 1.0,
+        colormapMinPressure: 0.0,
+        reverseColormap: false,
+        hideParticleOutOfRange: false,
+        sizeOutOfFocus: 2.5,
+        size:10,
+        lifetime: 6,
+    } );
+ 
+    // ToDo: implement scaling option <> 1.0
+    particleSystem.scale.x = 1,
+    particleSystem.scale.y = 1,
+    particleSystem.scale.z = 1,
+    scene.add( particleSystem );
+ 
+    var geometry = new THREE.SphereGeometry( 1.0, 10, 10 );
+    var material = new THREE.MeshBasicMaterial( {wireframe: true, color: 0x00ff00, transparent : true , opacity: 0.1} );
+ 
+    sphere = new THREE.Mesh( geometry, material );
+    sphere.position.x = 0.0
+    scene.add( sphere );
+    
+    // options passed during each spawned
+    options = {
+        lifetime: 2,
+        size: 5,
+        colormapMaxPressure: 1.0,
+        colormapMinPressure: 0,
+        reverseColormap: false,        
+        hideParticleOutOfRange: false,
+    };
+ 
+    spawnerOptions = {
+        spawnRate: 15000,
+        timeScale: 1
+    };
+ 
+    sphereOptions = {
+        useFocusSphere: true,
+        spherePositionX: 0.0,
+        spherePositionY: 0.0,
+        spherePositionZ: 0.0,        
+        sphereRadius: 0.3
+    };      
+ 
+    renderer = new THREE.WebGLRenderer();
+    renderer.setPixelRatio( window.devicePixelRatio );
+    renderer.setSize( window.innerWidth, window.innerHeight );
+    container.appendChild( renderer.domElement );
 	
-	var pdata = generateData();
+	var controls = new OrbitControls(camera, renderer.domElement)
 	
-	particleSystem = new THREE.GPUParticleSimulation( {
-		maxParticles: 250000,
-		fps: 60,
-		data: pdata,
-		colormapMaxPressure: 1.0,
-		colormapMinPressure: 0.0,
-		reverseColormap: false,
-		hideParticleOutOfRange: false,
-		sizeOutOfFocus: 2.5,
-		size:10,
-		lifetime: 6,
-	} );
-
-	// ToDo: implement scaling option <> 1.0
-	particleSystem.scale.x = 1,
-	particleSystem.scale.y = 1,
-	particleSystem.scale.z = 1,
-	scene.add( particleSystem );
-
-	var geometry = new THREE.SphereGeometry( 1.0, 10, 10 );
-	var material = new THREE.MeshBasicMaterial( {wireframe: true, color: 0x00ff00, transparent : true , opacity: 0.1} );
-
-	sphere = new THREE.Mesh( geometry, material );
-	sphere.position.x = 0.0
-	scene.add( sphere );
-	
-	// options passed during each spawned
-	options = {
-		lifetime: 2,
-		size: 5,
-		colormapMaxPressure: 1.0,
-		colormapMinPressure: 0,
-		reverseColormap: false,        
-		hideParticleOutOfRange: false,
-	};
-
-	spawnerOptions = {
-		spawnRate: 15000,
-		timeScale: 1
-	};
-
-	sphereOptions = {
-		useFocusSphere: true,
-		spherePositionX: 0.0,
-		spherePositionY: 0.0,
-		spherePositionZ: 0.0,        
-		sphereRadius: 0.3
-	};      
-
-	renderer = new THREE.WebGLRenderer();
-	renderer.setPixelRatio( window.devicePixelRatio );
-	renderer.setSize( window.innerWidth, window.innerHeight );
-	container.appendChild( renderer.domElement );
-	window.addEventListener( 'resize', onWindowResize, false );
+	camera.position.set( 10, 20, 100 );
+	controls.update();
+    window.addEventListener( 'resize', onWindowResize, false );
 }
-
+ 
 function onWindowResize() {
-	camera.aspect = window.innerWidth / window.innerHeight;
-	camera.updateProjectionMatrix();
-	renderer.setSize( window.innerWidth, window.innerHeight );
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize( window.innerWidth, window.innerHeight );
 }
-
+ 
 function animate() {
-	requestAnimationFrame( animate );
-	var delta = clock.getDelta() * spawnerOptions.timeScale;
-
-	tick += delta;
-
-	if ( tick < 0 ) tick = 0;
-
-	if ( delta > 0 ) {
-
-		for ( var x = 0; x < spawnerOptions.spawnRate * delta; x ++ ) {
-
-			// Spawning particles is super cheap, and once you spawn them, the rest of
-			// their lifecycle is handled entirely on the GPU, driven by a time uniform updated below
+    requestAnimationFrame( animate );
+    var delta = clock.getDelta() * spawnerOptions.timeScale;
+ 
+    tick += delta;
+ 
+    if ( tick < 0 ) tick = 0;
+ 
+    if ( delta > 0 ) {
+ 
+        for ( var x = 0; x < spawnerOptions.spawnRate * delta; x ++ ) {
+ 
+            // Spawning particles is super cheap, and once you spawn them, the rest of
+            // their lifecycle is handled entirely on the GPU, driven by a time uniform updated below
   
-			options.time = clock.getElapsedTime( );
-			particleSystem.spawnParticle( options ); 
-		}
-	}
-
-	spherePosition = new THREE.Vector3(sphereOptions.spherePositionX, sphereOptions.spherePositionY, sphereOptions.spherePositionZ)
-
-	sphereRadius = sphereOptions.sphereRadius
+            options.time = clock.getElapsedTime( );
+            particleSystem.spawnParticle( options ); 
+        }
+    }
+ 
+    spherePosition = new THREE.Vector3(sphereOptions.spherePositionX, sphereOptions.spherePositionY, sphereOptions.spherePositionZ)
+ 
+    sphereRadius = sphereOptions.sphereRadius * ( Math.sin(tick * 0.5)  * 0.05 + 0.5 );
       
       sphere.scale.x = sphereRadius
       sphere.scale.y = sphereRadius
@@ -156,15 +163,14 @@ function animate() {
       sphere.position.y = spherePosition.y
       sphere.position.z = spherePosition.z
       
-	particleSystem.update( tick, sphereOptions.useFocusSphere, [spherePosition], sphereRadius);
-
-	render();
+    particleSystem.update( tick, sphereOptions.useFocusSphere, [spherePosition], sphereRadius);
+	
+    render();
 }
-
+ 
 function render() {
-
-	renderer.render( scene, camera );
-
+ 
+    renderer.render( scene, camera );
 }
 ```
 
