@@ -130,17 +130,20 @@ THREE.GPUParticleSimulation = function ( options ) {
 			' alphaScale = 1.0;',
  
 		'	if( timeElapsed > 0.0 ) {',
+		
+		'	vec4 mvPosition = modelViewMatrix * vec4( position, 1.0 );',		
+		
  
       '	if( ( length(newPositionWorld.xyz - spherePosition1) < sphereRadius1 || length(newPositionWorld.xyz - spherePosition2) < sphereRadius2  || length(newPositionWorld.xyz - spherePosition3 ) < sphereRadius3    || length(newPositionWorld.xyz - spherePosition4 ) < sphereRadius4   || length(newPositionWorld.xyz - spherePosition5 ) < sphereRadius5   || length(newPositionWorld.xyz - spherePosition6 ) < sphereRadius6)    ) {',
  
 			'		gl_Position = projectionMatrix * modelViewMatrix * vec4( newPosition, 1.0 );', 
-       '	gl_PointSize = ( uScale * size ) * lifeLeft;',
+       '	gl_PointSize = ( uScale * size ) * lifeLeft * ( 2.0 / -mvPosition.z );',
  
  			'	} else {',
  
 			'		gl_Position = projectionMatrix * modelViewMatrix * vec4( newPosition, 1.0 );',
    
-       '	gl_PointSize = ( uScale * sizeOutOfFocus ) * lifeLeft;',
+       '	gl_PointSize = ( uScale * sizeOutOfFocus ) * lifeLeft * ( 2.0 / -mvPosition.z );',
       
       '	}',
       
