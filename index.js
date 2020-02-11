@@ -309,8 +309,10 @@ THREE.GPUParticleSimulation = function ( options ) {
     if (options.reverseColormap == true) {
       options.scalarColor = 1 - options.scalarColor 
     }
+	
+	var velocity = Math.sqrt( this.data[f][p][3] * this.data[f][p][3] + this.data[f][p][4] * this.data[f][p][4] + this.data[f][p][5] * this.data[f][p][4]);
     
-    if (options.hideParticleOutOfRange == false || (this.data[f][p][6] > options.colormapMinPressure && this.data[f][p][6] < options.colormapMaxPressure)) {
+    if (options.hideParticleOutOfRange == false || (this.data[f][p][6] > options.colormapMinPressure && this.data[f][p][6] < options.colormapMaxPressure && velocity < options.velocityMax && velocity > options.velocityMin )) {
      
       options.position = new THREE.Vector3();
       options.positionEnd = new THREE.Vector3();
@@ -380,17 +382,14 @@ THREE.GPUParticleContainer = function ( maxParticles, particleSystem ) {
 
 	this.particleShaderGeo = new THREE.BufferGeometry();
 
-	this.particleShaderGeo.addAttribute( 'position', new THREE.BufferAttribute( new Float32Array( this.PARTICLE_COUNT * 3 ), 3 ).setDynamic( true ) );
-	this.particleShaderGeo.addAttribute( 'positionStart', new THREE.BufferAttribute( new Float32Array( this.PARTICLE_COUNT * 3 ), 3 ).setDynamic( true ) );
-	this.particleShaderGeo.addAttribute( 'startTime', new THREE.BufferAttribute( new Float32Array( this.PARTICLE_COUNT ), 1 ).setDynamic( true ) );
-	this.particleShaderGeo.addAttribute( 'positionEnd', new THREE.BufferAttribute( new Float32Array( this.PARTICLE_COUNT * 3 ), 3 ).setDynamic( true ) );
-	this.particleShaderGeo.addAttribute( 'scalarColor', new THREE.BufferAttribute( new Float32Array( this.PARTICLE_COUNT ), 1 ).setDynamic( true ) );
-	this.particleShaderGeo.addAttribute( 'size', new THREE.BufferAttribute( new Float32Array( this.PARTICLE_COUNT ), 1 ).setDynamic( true ) );
-  
-	this.particleShaderGeo.addAttribute( 'sizeOutOfFocus', new THREE.BufferAttribute( new Float32Array( this.PARTICLE_COUNT ), 1 ).setDynamic( true ) );
-
-  
-	this.particleShaderGeo.addAttribute( 'lifeTime', new THREE.BufferAttribute( new Float32Array( this.PARTICLE_COUNT ), 1 ).setDynamic( true ) );
+	this.particleShaderGeo.setAttribute( 'position', new THREE.BufferAttribute( new Float32Array( this.PARTICLE_COUNT * 3 ), 3 ).setUsage( THREE.DynamicDrawUsage ) );
+	this.particleShaderGeo.setAttribute( 'positionStart', new THREE.BufferAttribute( new Float32Array( this.PARTICLE_COUNT * 3 ), 3 ).setUsage( THREE.DynamicDrawUsage ) );
+	this.particleShaderGeo.setAttribute( 'startTime', new THREE.BufferAttribute( new Float32Array( this.PARTICLE_COUNT ), 1 ).setUsage( THREE.DynamicDrawUsage ) );
+	this.particleShaderGeo.setAttribute( 'positionEnd', new THREE.BufferAttribute( new Float32Array( this.PARTICLE_COUNT * 3 ), 3 ).setUsage( THREE.DynamicDrawUsage ) );
+	this.particleShaderGeo.setAttribute( 'scalarColor', new THREE.BufferAttribute( new Float32Array( this.PARTICLE_COUNT ), 1 ).setUsage( THREE.DynamicDrawUsage ) );
+	this.particleShaderGeo.setAttribute( 'size', new THREE.BufferAttribute( new Float32Array( this.PARTICLE_COUNT ), 1 ).setUsage( THREE.DynamicDrawUsage ) );
+	this.particleShaderGeo.setAttribute( 'sizeOutOfFocus', new THREE.BufferAttribute( new Float32Array( this.PARTICLE_COUNT ), 1 ).setUsage( THREE.DynamicDrawUsage ) );
+	this.particleShaderGeo.setAttribute( 'lifeTime', new THREE.BufferAttribute( new Float32Array( this.PARTICLE_COUNT ), 1 ).setUsage( THREE.DynamicDrawUsage ) );
 
 	// material
 
