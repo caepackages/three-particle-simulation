@@ -237,3 +237,8 @@ browserify main.js -o bundle.js
 
 ## Examples
 <a href="https://zealous-aurora.glitch.me">Default Particle</a>
+
+## License
+```
+(c) Copyright 2020 Frank Rettig, all rights reserved.
+```
