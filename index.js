@@ -303,7 +303,7 @@ THREE.GPUParticleSimulation = function ( options ) {
     
     pressure = this.data[f][p][6]
     
-    var pDelta =  Math.max(options.colormapMaxPressure - options.colormapMinPressure, 1.0) 
+    var pDelta =  Math.max(options.colormapMaxPressure - options.colormapMinPressure, 0.0001) 
     options.scalarColor = Math.max(Math.min( (pressure - options.colormapMinPressure)  / pDelta, 1.0), 0.0);
     
     if (options.reverseColormap == true) {
